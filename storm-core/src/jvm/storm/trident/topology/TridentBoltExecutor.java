@@ -44,9 +44,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import storm.trident.spout.IBatchID;
 
 public class TridentBoltExecutor implements IRichBolt {
+    public static final Logger LOG = LoggerFactory.getLogger(TridentBoltExecutor.class);
     public static String COORD_STREAM_PREFIX = "$coord-";
     
     public static String COORD_STREAM(String batch) {
@@ -232,6 +235,7 @@ public class TridentBoltExecutor implements IRichBolt {
     }
     
     private void failBatch(TrackedBatch tracked, FailedException e) {
+        LOG.debug("Failing batch because of exception: ", e);
         if(e!=null && e instanceof ReportedFailedException) {
             _collector.reportError(e);
         }
